@@ -488,7 +488,7 @@ function saveEvent() {
   renderCalendar();
   renderDayTasks();
   if(currentTab==='mine') renderMine();
-  if(sheetsUrl) pushToSheets(ev);
+  if(sheetsUrl) pushToSheets();
 }
 
 function toggleDone(e, id) {
@@ -527,8 +527,12 @@ function syncSheets() {
     .then(r=>r.json())
     .then(data=>{
       if(data && Array.isArray(data.events)) {
-        events = data.events;
-        saveLocal();
+        if(data.events.length > 0) {
+          events = data.events;
+          saveLocal();
+        } else if(events.length > 0) {
+          pushToSheets();
+        }
         renderCalendar();
         renderDayTasks();
         if(currentTab==='mine') renderMine();
@@ -538,7 +542,7 @@ function syncSheets() {
     .catch(()=>updateSyncStatus());
 }
 
-function pushToSheets(ev) {
+function pushToSheets() {
   if(!sheetsUrl) return;
   fetch(sheetsUrl, {
     method:'POST',
