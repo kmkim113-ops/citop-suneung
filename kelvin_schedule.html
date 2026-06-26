@@ -271,7 +271,7 @@ let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
 let selectedDate = toDateStr(new Date());
 let editId = null;
-let sheetsUrl = localStorage.getItem('kelvin_sheets_url') || 'https://script.google.com/macros/s/AKfycbyBV5KaEonxPoLo9KMbKao0zzv17upmMEc-YZRAiCS8wsYklJtjYEYrlvf4i2bNY269Xg/exec';
+let sheetsUrl = localStorage.getItem('kelvin_sheets_url') || 'https://script.google.com/macros/s/AKfycbztq034KDcwDjqdlZA6x-SEeCZTVsJG4YAROHEcbYi7hcgujgsVx2SyEQIZ9sEzZBkYcw/exec';
 let currentTab = 'calendar';
 
 const COLORS = ['#2b5fa5','#d94f3d','#2e7d52','#f5c842','#7c3aed','#ea580c','#0891b2','#be185d'];
@@ -523,7 +523,7 @@ function updateSyncStatus(status) {
 function syncSheets() {
   if(!sheetsUrl) { openSheetsModal(); return; }
   updateSyncStatus('loading');
-  fetch(sheetsUrl+'?action=get')
+  fetch(sheetsUrl+'?action=get', {credentials:'omit'})
     .then(r=>r.json())
     .then(data=>{
       if(data && Array.isArray(data.events)) {
@@ -545,7 +545,7 @@ function syncSheets() {
 function pushToSheets() {
   if(!sheetsUrl) return;
   var eventsJson = encodeURIComponent(JSON.stringify(events));
-  fetch(sheetsUrl+'?action=save&events='+eventsJson)
+  fetch(sheetsUrl+'?action=save&events='+eventsJson, {credentials:'omit'})
     .then(r=>r.json())
     .then(()=>updateSyncStatus('ok'))
     .catch(()=>{});
