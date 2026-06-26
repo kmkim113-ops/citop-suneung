@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="켈빈 스케줄">
+<title>켈빈 스케줄</title>
+<style>
+  :root {
+    --primary: #2b5fa5;
+    --primary-light: #e8f0fb;
+    --primary-mid: #d0e0f7;
+    --ink: #1a1a2e;
+    --gray: #9ca3af;
+    --gray-light: #f3f4f6;
+    --border: #e2e0d8;
+    --red: #ef4444;
+    --green: #2e7d52;
+    --yellow: #f5c842;
+    --paper: #f8f7ff;
+  }
+
+  * { box-sizing:border-box; margin:0; padding:0; -webkit-tap-highlight-color:transparent; }
+  html, body { height:100%; font-family:-apple-system,BlinkMacSystemFont,'Noto Sans KR','Segoe UI',sans-serif; background:var(--paper); color:var(--ink); }
+
+  /* ══ 레이아웃 ══ */
+  .app { max-width:480px; margin:0 auto; background:#fff; min-height:100vh; padding-bottom:80px; position:relative; box-shadow:0 0 30px rgba(43,95,165,.08); }
+
+  /* ── 헤더 ── */
+  .header { padding:14px 16px 10px; background:#fff; border-bottom:1px solid var(--primary-mid); position:sticky; top:0; z-index:20; }
+  .header-top { display:flex; align-items:center; justify-content:space-between; margin-bottom:2px; }
+  .header-brand { font-size:10px; font-weight:900; letter-spacing:0.18em; color:#fff; background:var(--primary); padding:3px 9px; border-radius:20px; }
+  .header-title { font-size:18px; font-weight:700; color:var(--ink); }
+  .header-date { font-size:11.5px; color:var(--gray); margin-top:2px; }
+  .header-sync { font-size:10px; color:var(--gray); display:flex; align-items:center; gap:4px; cursor:pointer; }
+  .sync-dot { width:7px; height:7px; border-radius:50%; background:#d1d5db; }
+  .sync-dot.ok { background:#22c55e; }
+  .sync-dot.loading { background:var(--yellow); animation:pulse .8s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.4} }
+
+  /* ── 월 네비 ── */
+  .month-nav { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid #f0eeff; background:#faf9ff; }
+  .month-nav button { background:none; border:none; cursor:pointer; font-size:22px; color:var(--primary); padding:4px 10px; border-radius:8px; line-height:1; }
+  .month-nav button:active { background:var(--primary-light); }
+  .month-title { font-size:16px; font-weight:700; color:var(--ink); }
+
+  /* ── 탭 ── */
+  .tabs { display:flex; border-bottom:2px solid var(--border); background:#fff; position:sticky; top:57px; z-index:19; }
+  .tab { flex:1; padding:10px 4px; text-align:center; font-size:11px; cursor:pointer; color:var(--gray); border-bottom:3px solid transparent; margin-bottom:-2px; transition:all .2s; font-weight:600; }
+  .tab .tab-icon { font-size:17px; display:block; margin-bottom:2px; }
+  .tab.active { color:var(--primary); border-bottom-color:var(--primary); }
+
+  /* ── 섹션 ── */
+  .section { padding:14px 14px; display:none; }
+  .section.active { display:block; }
+
+  /* ── 달력 ── */
+  .cal-grid { display:grid; grid-template-columns:repeat(7,1fr); gap:3px; margin-bottom:10px; }
+  .cal-day-label { text-align:center; font-size:11px; color:var(--gray); padding:6px 0; font-weight:700; }
+  .cal-day-label:first-child { color:var(--red); }
+  .cal-day-label:last-child { color:var(--primary); }
+  .cal-day { min-height:52px; border-radius:10px; padding:5px 3px; cursor:pointer; border:1.5px solid transparent; transition:all .15s; user-select:none; }
+  .cal-day:active { transform:scale(0.95); }
+  .cal-day.other-month .day-num { color:#ddd; }
+  .cal-day.today { background:var(--primary-light); border-color:var(--primary-mid); }
+  .cal-day.selected { background:var(--primary); border-color:var(--primary); }
+  .cal-day.selected .day-num { color:#fff; }
+  .cal-day.today.selected { background:#1e4a8a; }
+  .day-num { font-size:13px; font-weight:700; color:var(--ink); text-align:center; line-height:1; }
+  .cal-day.sun .day-num { color:var(--red); }
+  .cal-day.sat .day-num { color:var(--primary); }
+  .cal-day.selected .day-num { color:#fff !important; }
+  .day-dots { display:flex; flex-wrap:wrap; gap:2px; margin-top:4px; justify-content:center; }
+  .dot { width:5px; height:5px; border-radius:50%; }
+
+  /* ── 선택된 날 일정 ── */
+  .selected-day-header { font-size:14px; font-weight:700; color:var(--ink); margin:14px 0 10px; padding-bottom:8px; border-bottom:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; }
+  .day-add-btn { font-size:11px; font-weight:700; color:var(--primary); background:var(--primary-light); border:none; padding:5px 12px; border-radius:20px; cursor:pointer; }
+
+  /* ── 일정 카드 ── */
+  .event-card { background:#fff; border:1.5px solid var(--border); border-radius:12px; padding:12px 14px; margin-bottom:8px; display:flex; align-items:flex-start; gap:10px; cursor:pointer; transition:all .15s; }
+  .event-card:active { transform:scale(0.98); }
+  .event-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; margin-top:4px; }
+  .event-info { flex:1; min-width:0; }
+  .event-title { font-size:13.5px; font-weight:600; color:var(--ink); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .event-title.done { text-decoration:line-through; color:var(--gray); }
+  .event-meta { font-size:11px; color:var(--gray); margin-top:3px; }
+  .event-check { width:22px; height:22px; border-radius:50%; border:2px solid var(--border); background:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:12px; flex-shrink:0; transition:all .2s; }
+  .event-check.done { background:var(--green); border-color:var(--green); color:#fff; }
+  .event-delete { background:none; border:none; color:#ddd; font-size:17px; cursor:pointer; padding:2px 4px; flex-shrink:0; }
+  .event-delete:active { color:var(--red); }
+
+  /* ── 내일정 섹션 ── */
+  .mine-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:12px; }
+  .mine-title { font-size:14px; font-weight:700; color:var(--ink); }
+  .mine-add-btn { font-size:11px; font-weight:700; color:var(--primary); background:var(--primary-light); border:none; padding:6px 13px; border-radius:20px; cursor:pointer; }
+
+  /* ── 빈 상태 ── */
+  .empty-state { text-align:center; padding:32px 0; color:var(--gray); }
+  .empty-icon { font-size:34px; display:block; margin-bottom:8px; }
+  .empty-text { font-size:13px; }
+
+  /* ── FAB ── */
+  .fab { position:fixed; bottom:22px; right:calc(50% - 220px); background:var(--primary); color:#fff; border:none; width:54px; height:54px; border-radius:50%; font-size:26px; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:50; box-shadow:0 4px 16px rgba(43,95,165,.4); transition:all .2s; }
+  .fab:active { transform:scale(0.92); background:#1e4a8a; }
+
+  /* ── 모달 ── */
+  .modal-bg { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:100; align-items:flex-end; justify-content:center; }
+  .modal-bg.open { display:flex; }
+  .modal { background:#fff; border-radius:20px 20px 0 0; padding:20px 16px 40px; width:100%; max-width:480px; max-height:90vh; overflow-y:auto; }
+  .modal-handle { width:36px; height:4px; background:#e0e0e0; border-radius:2px; margin:0 auto 16px; }
+  .modal-title { font-size:16px; font-weight:700; margin-bottom:16px; color:var(--ink); }
+  .field { margin-bottom:13px; }
+  .field label { display:block; font-size:11.5px; color:var(--gray); margin-bottom:5px; font-weight:600; }
+  .field input, .field textarea, .field select { width:100%; padding:11px 13px; border-radius:10px; border:1.5px solid var(--border); background:#faf9ff; color:var(--ink); font-size:14px; font-family:inherit; outline:none; transition:border-color .2s; }
+  .field input:focus, .field textarea:focus, .field select:focus { border-color:var(--primary); }
+  .field textarea { resize:none; min-height:65px; }
+  .color-row { display:flex; gap:10px; flex-wrap:wrap; }
+  .color-opt { width:28px; height:28px; border-radius:50%; cursor:pointer; border:3px solid transparent; transition:all .15s; }
+  .color-opt.selected { border-color:var(--ink); transform:scale(1.2); }
+  .btn-row { display:flex; gap:10px; margin-top:18px; }
+  .btn-row button { flex:1; padding:13px; border-radius:12px; font-size:14px; font-weight:700; cursor:pointer; border:none; font-family:inherit; }
+  .btn-cancel { background:var(--gray-light); color:var(--gray); }
+  .btn-save { background:var(--primary); color:#fff; }
+
+  /* ── Sheets 연동 설정 ── */
+  .sheets-banner { background:var(--primary-light); border:1.5px solid var(--primary-mid); border-radius:10px; padding:10px 13px; margin-bottom:12px; display:flex; align-items:center; gap:8px; cursor:pointer; }
+  .sheets-banner-text { font-size:11.5px; color:var(--primary); font-weight:600; flex:1; }
+  .sheets-banner-arrow { color:var(--primary); font-size:14px; }
+
+  /* ── 반응형 PC ── */
+  @media (min-width: 768px) {
+    body { background:#f0f2f5; }
+    .app { max-width:800px; margin:20px auto; border-radius:16px; min-height:calc(100vh - 40px); padding-bottom:20px; }
+    .tabs { top:61px; }
+    .fab { right:calc(50% - 380px); bottom:30px; }
+    .section { padding:20px 24px; }
+    .cal-day { min-height:70px; }
+    .day-num { font-size:15px; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 헤더 -->
+  <div class="header">
+    <div class="header-top">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <div class="header-brand">KELVIN</div>
+        <div class="header-title">스케줄</div>
+      </div>
+      <div class="header-sync" onclick="syncSheets()">
+        <div class="sync-dot" id="syncDot"></div>
+        <span id="syncLabel">Sheets 연동</span>
+      </div>
+    </div>
+    <div class="header-date" id="todayLabel"></div>
+  </div>
+
+  <!-- 월 네비 -->
+  <div class="month-nav">
+    <button onclick="changeMonth(-1)">&#8249;</button>
+    <span class="month-title" id="monthTitle"></span>
+    <button onclick="changeMonth(1)">&#8250;</button>
+  </div>
+
+  <!-- 탭 -->
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('calendar')">
+      <span class="tab-icon">📅</span>달력
+    </div>
+    <div class="tab" onclick="switchTab('mine')">
+      <span class="tab-icon">🗓️</span>내일정
+    </div>
+  </div>
+
+  <!-- 달력 섹션 -->
+  <div class="section active" id="sec-calendar">
+    <div class="cal-grid" id="calLabels"></div>
+    <div class="cal-grid" id="calGrid"></div>
+    <div id="dayTasks"></div>
+  </div>
+
+  <!-- 내일정 섹션 -->
+  <div class="section" id="sec-mine">
+    <div class="mine-header">
+      <div class="mine-title">📋 전체 일정</div>
+      <button class="mine-add-btn" onclick="openModal()">＋ 추가</button>
+    </div>
+    <div id="mineTasks"></div>
+  </div>
+
+</div>
+
+<!-- FAB -->
+<button class="fab" onclick="openModal()">＋</button>
+
+<!-- 일정 추가 모달 -->
+<div class="modal-bg" id="modalBg">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title" id="modalTitle">일정 추가</div>
+
+    <div class="field">
+      <label>제목</label>
+      <input type="text" id="f-title" placeholder="일정 제목을 입력하세요">
+    </div>
+    <div class="field">
+      <label>날짜</label>
+      <input type="date" id="f-date">
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+      <div class="field">
+        <label>시작 시간</label>
+        <input type="time" id="f-start">
+      </div>
+      <div class="field">
+        <label>종료 시간</label>
+        <input type="time" id="f-end">
+      </div>
+    </div>
+    <div class="field">
+      <label>메모</label>
+      <textarea id="f-memo" placeholder="메모 (선택)"></textarea>
+    </div>
+    <div class="field">
+      <label>색상</label>
+      <div class="color-row" id="colorRow"></div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeModal()">취소</button>
+      <button class="btn-save" onclick="saveEvent()">저장</button>
+    </div>
+  </div>
+</div>
+
+<!-- Sheets 설정 모달 -->
+<div class="modal-bg" id="sheetsBg">
+  <div class="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-title">📊 Google Sheets 연동</div>
+    <div style="font-size:12px;color:var(--gray);line-height:1.7;margin-bottom:16px;">
+      Google Sheets를 데이터 저장소로 사용하면<br>
+      PC·폰 어디서든 같은 일정을 볼 수 있어요!
+    </div>
+    <div class="field">
+      <label>Sheets 웹앱 URL</label>
+      <input type="text" id="sheetsUrl" placeholder="https://script.google.com/macros/s/...">
+    </div>
+    <div style="background:#fffbe6;border:1px solid #f5c842;border-radius:8px;padding:10px 12px;font-size:11.5px;color:#7a5f00;line-height:1.7;margin-bottom:14px;">
+      💡 아래 단계로 설정하세요:<br>
+      1. Google Sheets 새 시트 생성<br>
+      2. 확장 프로그램 → Apps Script<br>
+      3. 제공된 코드 붙여넣기<br>
+      4. 배포 → 웹앱으로 배포 → URL 복사
+    </div>
+    <div class="btn-row">
+      <button class="btn-cancel" onclick="closeSheetsModal()">닫기</button>
+      <button class="btn-save" onclick="saveSheetsUrl()">저장</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══ 상태 ══
+let events = JSON.parse(localStorage.getItem('kelvin_events') || '[]');
+let currentYear = new Date().getFullYear();
+let currentMonth = new Date().getMonth();
+let selectedDate = toDateStr(new Date());
+let editId = null;
+let sheetsUrl = localStorage.getItem('kelvin_sheets_url') || '';
+let currentTab = 'calendar';
+
+const COLORS = ['#2b5fa5','#d94f3d','#2e7d52','#f5c842','#7c3aed','#ea580c','#0891b2','#be185d'];
+
+// ══ 초기화 ══
+window.onload = () => {
+  initToday();
+  renderCalendar();
+  renderDayTasks();
+  renderMine();
+  updateSyncStatus();
+  if(sheetsUrl) syncSheets();
+};
+
+function toDateStr(d) {
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
+
+function initToday() {
+  const now = new Date();
+  const days = ['일','월','화','수','목','금','토'];
+  document.getElementById('todayLabel').textContent =
+    `${now.getFullYear()}년 ${now.getMonth()+1}월 ${now.getDate()}일 (${days[now.getDay()]})`;
+}
+
+// ══ 탭 전환 ══
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  const tabs = ['calendar','mine'];
+  const idx = tabs.indexOf(tab);
+  document.querySelectorAll('.tab')[idx].classList.add('active');
+  document.getElementById('sec-'+tab).classList.add('active');
+  if(tab==='mine') renderMine();
+}
+
+// ══ 달력 ══
+function changeMonth(dir) {
+  currentMonth += dir;
+  if(currentMonth > 11) { currentMonth=0; currentYear++; }
+  if(currentMonth < 0)  { currentMonth=11; currentYear--; }
+  renderCalendar();
+  renderDayTasks();
+}
+
+function renderCalendar() {
+  const labels = ['일','월','화','수','목','금','토'];
+  const labelsEl = document.getElementById('calLabels');
+  labelsEl.innerHTML = labels.map(l=>`<div class="cal-day-label">${l}</div>`).join('');
+
+  document.getElementById('monthTitle').textContent =
+    `${currentYear}년 ${currentMonth+1}월`;
+
+  const grid = document.getElementById('calGrid');
+  const first = new Date(currentYear, currentMonth, 1);
+  const last  = new Date(currentYear, currentMonth+1, 0);
+  const today = toDateStr(new Date());
+
+  let html = '';
+  // 앞 빈칸
+  for(let i=0; i<first.getDay(); i++) {
+    const d = new Date(currentYear, currentMonth, -first.getDay()+1+i);
+    html += `<div class="cal-day other-month"><div class="day-num">${d.getDate()}</div></div>`;
+  }
+  // 이번달
+  for(let d=1; d<=last.getDate(); d++) {
+    const dateStr = `${currentYear}-${String(currentMonth+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dow = new Date(currentYear,currentMonth,d).getDay();
+    const isToday = dateStr===today;
+    const isSelected = dateStr===selectedDate;
+    const dayEvents = events.filter(e=>e.date===dateStr);
+    const dots = dayEvents.slice(0,4).map(e=>`<div class="dot" style="background:${e.color}"></div>`).join('');
+    const cls = ['cal-day', dow===0?'sun':dow===6?'sat':'', isToday?'today':'', isSelected?'selected':''].filter(Boolean).join(' ');
+    html += `<div class="${cls}" onclick="selectDay('${dateStr}')">
+      <div class="day-num">${d}</div>
+      <div class="day-dots">${dots}</div>
+    </div>`;
+  }
+  grid.innerHTML = html;
+}
+
+function selectDay(dateStr) {
+  selectedDate = dateStr;
+  renderCalendar();
+  renderDayTasks();
+  document.getElementById('sec-calendar').scrollTo({top:200,behavior:'smooth'});
+}
+
+function renderDayTasks() {
+  const el = document.getElementById('dayTasks');
+  const d = new Date(selectedDate+'T00:00:00');
+  const days = ['일','월','화','수','목','금','토'];
+  const dayEvents = events.filter(e=>e.date===selectedDate).sort((a,b)=>a.start.localeCompare(b.start));
+
+  let html = `<div class="selected-day-header">
+    <span>${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})</span>
+    <button class="day-add-btn" onclick="openModal('${selectedDate}')">＋ 추가</button>
+  </div>`;
+
+  if(!dayEvents.length) {
+    html += `<div class="empty-state"><span class="empty-icon">📭</span><div class="empty-text">일정이 없어요</div></div>`;
+  } else {
+    html += dayEvents.map(e=>eventCardHTML(e)).join('');
+  }
+  el.innerHTML = html;
+}
+
+function renderMine() {
+  const el = document.getElementById('mineTasks');
+  const sorted = [...events].sort((a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start));
+  if(!sorted.length) {
+    el.innerHTML = `<div class="empty-state"><span class="empty-icon">📭</span><div class="empty-text">일정이 없어요</div></div>`;
+    return;
+  }
+
+  // 날짜별 그룹
+  const groups = {};
+  sorted.forEach(e=>{ if(!groups[e.date]) groups[e.date]=[]; groups[e.date].push(e); });
+  const days = ['일','월','화','수','목','금','토'];
+
+  let html = '';
+  Object.keys(groups).sort().forEach(date=>{
+    const d = new Date(date+'T00:00:00');
+    const today = toDateStr(new Date());
+    const isToday = date===today;
+    html += `<div style="font-size:12px;font-weight:700;color:${isToday?'var(--primary)':'var(--gray)'};margin:14px 0 7px;padding-bottom:5px;border-bottom:1px solid var(--border);">
+      ${isToday?'📍 오늘 · ':''} ${d.getMonth()+1}월 ${d.getDate()}일 (${days[d.getDay()]})
+    </div>`;
+    html += groups[date].map(e=>eventCardHTML(e)).join('');
+  });
+  el.innerHTML = html;
+}
+
+function eventCardHTML(e) {
+  const timeStr = e.start ? (e.end ? `${e.start} ~ ${e.end}` : e.start) : '';
+  return `<div class="event-card" onclick="openEdit('${e.id}')">
+    <div class="event-dot" style="background:${e.color}"></div>
+    <div class="event-info">
+      <div class="event-title ${e.done?'done':''}">${e.title}</div>
+      <div class="event-meta">${timeStr}${e.memo?' · '+e.memo:''}</div>
+    </div>
+    <button class="event-check ${e.done?'done':''}" onclick="toggleDone(event,'${e.id}')">${e.done?'✓':''}</button>
+    <button class="event-delete" onclick="deleteEvent(event,'${e.id}')">×</button>
+  </div>`;
+}
+
+// ══ 모달 ══
+let selectedColor = COLORS[0];
+
+function openModal(date) {
+  editId = null;
+  document.getElementById('modalTitle').textContent = '일정 추가';
+  document.getElementById('f-title').value = '';
+  document.getElementById('f-date').value = date || selectedDate;
+  document.getElementById('f-start').value = '';
+  document.getElementById('f-end').value = '';
+  document.getElementById('f-memo').value = '';
+  selectedColor = COLORS[0];
+  renderColorRow();
+  document.getElementById('modalBg').classList.add('open');
+}
+
+function openEdit(id) {
+  const e = events.find(ev=>ev.id===id);
+  if(!e) return;
+  editId = id;
+  document.getElementById('modalTitle').textContent = '일정 수정';
+  document.getElementById('f-title').value = e.title;
+  document.getElementById('f-date').value = e.date;
+  document.getElementById('f-start').value = e.start||'';
+  document.getElementById('f-end').value = e.end||'';
+  document.getElementById('f-memo').value = e.memo||'';
+  selectedColor = e.color;
+  renderColorRow();
+  document.getElementById('modalBg').classList.add('open');
+}
+
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); }
+
+function renderColorRow() {
+  document.getElementById('colorRow').innerHTML = COLORS.map(c=>
+    `<div class="color-opt ${c===selectedColor?'selected':''}" style="background:${c}" onclick="pickColor('${c}')"></div>`
+  ).join('');
+}
+
+function pickColor(c) { selectedColor=c; renderColorRow(); }
+
+function saveEvent() {
+  const title = document.getElementById('f-title').value.trim();
+  if(!title) { alert('제목을 입력해주세요!'); return; }
+
+  const ev = {
+    id: editId || Date.now().toString(),
+    title,
+    date: document.getElementById('f-date').value,
+    start: document.getElementById('f-start').value,
+    end: document.getElementById('f-end').value,
+    memo: document.getElementById('f-memo').value.trim(),
+    color: selectedColor,
+    done: false
+  };
+
+  if(editId) {
+    const idx = events.findIndex(e=>e.id===editId);
+    ev.done = events[idx].done;
+    events[idx] = ev;
+  } else {
+    events.push(ev);
+  }
+
+  saveLocal();
+  closeModal();
+  renderCalendar();
+  renderDayTasks();
+  if(currentTab==='mine') renderMine();
+  if(sheetsUrl) pushToSheets(ev);
+}
+
+function toggleDone(e, id) {
+  e.stopPropagation();
+  const ev = events.find(ev=>ev.id===id);
+  if(ev) { ev.done=!ev.done; saveLocal(); renderCalendar(); renderDayTasks(); if(currentTab==='mine') renderMine(); }
+}
+
+function deleteEvent(e, id) {
+  e.stopPropagation();
+  if(!confirm('삭제할까요?')) return;
+  events = events.filter(ev=>ev.id!==id);
+  saveLocal();
+  renderCalendar();
+  renderDayTasks();
+  if(currentTab==='mine') renderMine();
+}
+
+function saveLocal() { localStorage.setItem('kelvin_events', JSON.stringify(events)); }
+
+// ══ Google Sheets 연동 ══
+function updateSyncStatus(status) {
+  const dot = document.getElementById('syncDot');
+  const label = document.getElementById('syncLabel');
+  dot.className = 'sync-dot';
+  if(status==='ok')      { dot.classList.add('ok');      label.textContent='연동됨 ✓'; }
+  else if(status==='loading') { dot.classList.add('loading'); label.textContent='동기화 중...'; }
+  else if(sheetsUrl)     { label.textContent='Sheets 설정됨'; }
+  else                   { label.textContent='Sheets 연동'; }
+}
+
+function syncSheets() {
+  if(!sheetsUrl) { openSheetsModal(); return; }
+  updateSyncStatus('loading');
+  fetch(sheetsUrl+'?action=get')
+    .then(r=>r.json())
+    .then(data=>{
+      if(data && Array.isArray(data.events)) {
+        events = data.events;
+        saveLocal();
+        renderCalendar();
+        renderDayTasks();
+        if(currentTab==='mine') renderMine();
+      }
+      updateSyncStatus('ok');
+    })
+    .catch(()=>updateSyncStatus());
+}
+
+function pushToSheets(ev) {
+  if(!sheetsUrl) return;
+  fetch(sheetsUrl, {
+    method:'POST',
+    body: JSON.stringify({action:'save', events}),
+    headers:{'Content-Type':'application/json'}
+  }).then(()=>updateSyncStatus('ok')).catch(()=>{});
+}
+
+function openSheetsModal()  { document.getElementById('sheetsBg').classList.add('open'); document.getElementById('sheetsUrl').value=sheetsUrl; }
+function closeSheetsModal() { document.getElementById('sheetsBg').classList.remove('open'); }
+function saveSheetsUrl() {
+  sheetsUrl = document.getElementById('sheetsUrl').value.trim();
+  localStorage.setItem('kelvin_sheets_url', sheetsUrl);
+  closeSheetsModal();
+  if(sheetsUrl) syncSheets();
+}
+</script>
+</body>
+</html>
