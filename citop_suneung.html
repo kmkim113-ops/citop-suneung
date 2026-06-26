@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>씨탑 수능정복</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@400;700&display=swap');
+
+  :root {
+    --ink:         #1a1a2e;
+    --paper:       #f5f4f0;
+    --blue:        #2b5fa5;
+    --blue-light:  #e8f0fb;
+    --blue-mid:    #d0e0f7;
+    --red:         #d94f3d;
+    --red-light:   #fdecea;
+    --yellow:      #f5c842;
+    --yellow-light:#fffbe6;
+    --green:       #2e7d52;
+    --green-light: #e8f5ee;
+    --gray:        #9ca3af;
+    --gray-light:  #f3f4f6;
+    --border:      #e2e0d8;
+    --sidebar-bg:  #1a1a2e;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body { height: 100%; font-family: 'Noto Sans KR', sans-serif; background: var(--paper); color: var(--ink); font-size: 13px; }
+
+  /* ══ 레이아웃 ══ */
+  .app { display: grid; grid-template-columns: 270px 1fr; grid-template-rows: 48px 1fr; height: 100vh; }
+
+  /* ── 탑바 ── */
+  .topbar {
+    grid-column: 1 / -1;
+    background: var(--sidebar-bg);
+    display: flex; align-items: center;
+    padding: 0 20px; gap: 10px;
+    border-bottom: 2px solid var(--blue);
+  }
+  .topbar-brand { font-size: 10px; font-weight: 900; letter-spacing: 0.18em; color: var(--blue-light); border: 1.5px solid var(--blue); padding: 2px 8px; border-radius: 3px; }
+  .topbar-title { font-family: 'Noto Serif KR', serif; font-size: 15px; font-weight: 700; color: #fff; }
+  .topbar-sub   { font-size: 10px; color: #6b7280; }
+  .topbar-right { margin-left: auto; font-size: 10px; color: #4b5563; }
+
+  /* ── 사이드바 ── */
+  .sidebar {
+    background: var(--sidebar-bg);
+    border-right: 1px solid #2d2d4e;
+    padding: 14px 13px;
+    overflow-y: auto;
+    display: flex; flex-direction: column; gap: 12px;
+  }
+
+  /* API 키 섹션 */
+  .api-section {
+    background: #111827;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 10px 12px;
+  }
+  .api-label-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; }
+  .api-label { font-size: 9.5px; font-weight: 700; color: #6b7280; letter-spacing: 0.1em; text-transform: uppercase; }
+  .api-status { font-size: 9px; padding: 2px 7px; border-radius: 20px; font-weight: 700; }
+  .api-status.ok  { background: #14532d; color: #86efac; }
+  .api-status.err { background: #450a0a; color: #fca5a5; }
+  .api-status.idle{ background: #1f2937; color: #6b7280; }
+  .api-input-wrap { display: flex; gap: 5px; }
+  input#apiKey {
+    flex: 1; background: #1f2937; border: 1px solid #374151; border-radius: 5px;
+    color: #e5e7eb; font-family: 'Noto Sans KR', sans-serif; font-size: 11px;
+    padding: 6px 9px; outline: none;
+  }
+  input#apiKey:focus { border-color: var(--blue); }
+  input#apiKey::placeholder { color: #4b5563; }
+  .btn-api-save {
+    background: var(--blue); color: #fff; border: none; border-radius: 5px;
+    font-size: 10px; font-weight: 700; padding: 0 10px; cursor: pointer; white-space: nowrap;
+  }
+  .btn-api-save:hover { background: #1e4a8a; }
+  .api-hint { font-size: 9.5px; color: #4b5563; margin-top: 5px; line-height: 1.5; }
+
+  .sb-label { font-size: 10.5px; font-weight: 700; color: #9ca3af; margin-bottom: 4px; display: block; }
+  .sb-section-title { font-size: 9px; font-weight: 900; letter-spacing: 0.15em; text-transform: uppercase; color: #4b5563; }
+
+  textarea.sb-textarea {
+    width: 100%; background: #111827; border: 1px solid #374151; border-radius: 6px;
+    color: #e5e7eb; font-family: 'Noto Sans KR', sans-serif; font-size: 11.5px;
+    line-height: 1.7; padding: 9px 11px; resize: vertical; outline: none;
+  }
+  textarea.sb-textarea:focus { border-color: var(--blue); }
+  textarea.sb-textarea::placeholder { color: #4b5563; }
+
+  .sb-select {
+    width: 100%; background: #111827; border: 1px solid #374151; border-radius: 6px;
+    color: #e5e7eb; font-family: 'Noto Sans KR', sans-serif; font-size: 11.5px;
+    padding: 7px 10px; outline: none; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%236b7280'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 10px center;
+  }
+  .sb-select:focus { border-color: var(--blue); }
+
+  .btn-analyze {
+    width: 100%; padding: 11px; background: var(--blue); color: #fff; border: none;
+    border-radius: 7px; font-family: 'Noto Sans KR', sans-serif; font-size: 13px;
+    font-weight: 900; cursor: pointer; letter-spacing: 0.05em;
+    transition: background .2s, transform .1s; margin-top: auto;
+  }
+  .btn-analyze:hover   { background: #1e4a8a; }
+  .btn-analyze:active  { transform: scale(0.98); }
+  .btn-analyze:disabled{ background: #374151; color: #6b7280; cursor: not-allowed; }
+
+  .btn-reset {
+    width: 100%; padding: 7px; background: transparent; color: #4b5563;
+    border: 1px solid #2d2d4e; border-radius: 7px; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 11px; cursor: pointer;
+  }
+  .btn-reset:hover { color: #9ca3af; border-color: #4b5563; }
+
+  /* ══ 메인 영역 ══ */
+  .main {
+    display: flex; flex-direction: column; min-height: 0; overflow: hidden;
+  }
+
+  /* ── 탭 바 ── */
+  .tab-bar {
+    display: flex; align-items: center;
+    background: #fff; border-bottom: 2px solid var(--border);
+    padding: 0 20px; gap: 0; flex-shrink: 0;
+  }
+  .tab-btn {
+    display: flex; align-items: center; gap: 6px;
+    padding: 12px 18px; font-size: 12px; font-weight: 700;
+    color: var(--gray); border: none; background: none;
+    border-bottom: 3px solid transparent; margin-bottom: -2px;
+    cursor: pointer; transition: color .15s, border-color .15s;
+    font-family: 'Noto Sans KR', sans-serif; letter-spacing: 0.03em;
+  }
+  .tab-btn:hover { color: var(--blue); }
+  .tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+  .tab-badge {
+    font-size: 9px; font-weight: 700; padding: 1px 7px; border-radius: 20px;
+  }
+  .tab-btn.active .badge-teacher { background: var(--blue-mid); color: var(--blue); }
+  .tab-btn.active .badge-student { background: var(--green-light); color: var(--green); }
+  .tab-btn:not(.active) .tab-badge { background: var(--gray-light); color: var(--gray); }
+
+  .tab-right { margin-left: auto; }
+  .btn-pdf {
+    display: flex; align-items: center; gap: 5px;
+    padding: 7px 14px; background: var(--ink); color: #fff; border: none;
+    border-radius: 6px; font-family: 'Noto Sans KR', sans-serif;
+    font-size: 11.5px; font-weight: 700; cursor: pointer;
+  }
+  .btn-pdf:hover { background: #2d2d4e; }
+  .btn-pdf:disabled { background: #d1d5db; color: #9ca3af; cursor: not-allowed; }
+
+  /* ── 탭 콘텐츠 ── */
+  .tab-content { flex: 1; overflow-y: auto; padding: 18px 22px; min-height: 0; display: none; flex-direction: column; gap: 12px; }
+  .tab-content.active { display: flex; }
+
+  /* ── 빈 상태 / 로딩 ── */
+  .empty-state {
+    flex: 1; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 8px; text-align: center;
+  }
+  .empty-icon  { font-size: 36px; }
+  .empty-title { font-size: 14px; font-weight: 700; color: #9ca3af; }
+  .empty-sub   { font-size: 11.5px; color: #d1d5db; line-height: 1.6; }
+
+  .loading-state { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; }
+  .spinner { width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--blue); border-radius: 50%; animation: spin .7s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .loading-text { font-size: 12px; color: var(--gray); }
+
+  /* ══ 선생님 분석 콘텐츠 ══ */
+  .meta-chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip { display: flex; flex-direction: column; background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 8px 13px; flex: 1; min-width: 90px; }
+  .chip-label { font-size: 9px; font-weight: 700; color: var(--gray); letter-spacing: 0.08em; text-transform: uppercase; }
+  .chip-value { font-size: 12.5px; font-weight: 700; color: var(--ink); margin-top: 2px; }
+
+  .analysis-card { background: #fff; border: 1.5px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .analysis-card-header { background: var(--ink); color: #fff; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; padding: 7px 14px; display: flex; align-items: center; gap: 8px; }
+  .step-dot { width: 18px; height: 18px; background: var(--yellow); color: var(--ink); border-radius: 50%; font-size: 9px; font-weight: 900; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .analysis-card-body { padding: 13px 15px; font-size: 12.5px; line-height: 1.85; color: var(--ink); }
+
+  /* ══ 학생 프린트 콘텐츠 ══ */
+  .hl-yellow  { background: #fffbe6; border-bottom: 2px solid #f5c842; padding: 0 1px; border-radius: 2px; }
+  .hl-red     { background: #fdecea; border-bottom: 2px solid #d94f3d; padding: 0 1px; border-radius: 2px; font-weight: 700; }
+  .hl-blue    { background: #e8f0fb; color: #2b5fa5; font-weight: 900; padding: 1px 4px; border-radius: 3px; border: 1.5px solid #2b5fa5; }
+  .hl-green   { background: #e8f5ee; border-bottom: 2px solid #2e7d52; padding: 0 1px; border-radius: 2px; }
+  .tmi-text   { color: #c0bdb5; text-decoration: line-through; text-decoration-color: #c0bdb5; }
+
+  .comment-bubble-p {
+    display: flex; align-items: flex-start; gap: 5px;
+    border-left: 3px solid #2b5fa5; border-radius: 0 6px 6px 0;
+    padding: 5px 12px; font-size: 11px; font-weight: 500; line-height: 1.55;
+    margin: 5px 0 3px; width: 100%; background: #e8f0fb; color: #2b5fa5;
+  }
+  .comment-bubble-p.cb-red    { background: #fdecea; border-color: #d94f3d; color: #d94f3d; }
+  .comment-bubble-p.cb-green  { background: #e8f5ee; border-color: #2e7d52; color: #2e7d52; }
+  .comment-bubble-p.cb-yellow { background: #fffbe6; border-color: #c9a500; color: #7a5f00; }
+
+  .p-legend { display: flex; flex-wrap: wrap; gap: 5px 12px; background: var(--gray-light); border: 1px solid var(--border); border-radius: 6px; padding: 7px 13px; font-size: 10.5px; align-items: center; }
+  .p-legend-title { font-weight: 700; font-size: 9.5px; color: var(--gray); margin-right: 4px; }
+
+  .p-meta-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 7px; }
+  .p-meta-box { border: 1px solid var(--border); border-radius: 6px; padding: 7px 11px; background: #fff; }
+  .p-meta-label { font-size: 9px; font-weight: 700; color: var(--gray); }
+  .p-meta-value { font-size: 11.5px; font-weight: 700; color: var(--ink); margin-top: 2px; }
+
+  .passage-box { background: #fff; border: 1.5px solid var(--border); border-radius: 10px; padding: 22px 24px 18px; position: relative; }
+  .passage-box-label { position: absolute; top: -10px; left: 14px; background: var(--ink); color: #fff; font-size: 9px; font-weight: 700; letter-spacing: 0.12em; padding: 2px 10px; border-radius: 20px; }
+  .passage-box-text { font-size: 15px; line-height: 2.2; color: var(--ink); }
+
+  .p-card { background: #fff; border: 1.5px solid var(--border); border-radius: 8px; overflow: hidden; }
+  .p-card-header { background: var(--ink); color: #fff; font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; padding: 6px 13px; }
+  .p-card-body   { padding: 12px 14px; }
+
+  .p-choices { display: flex; flex-direction: column; gap: 5px; }
+  .p-choice { display: flex; align-items: flex-start; gap: 9px; padding: 6px 10px; border-radius: 6px; font-size: 12.5px; line-height: 1.55; }
+  .p-choice.correct { background: #e8f5ee; border: 1.5px solid #2e7d52; }
+  .p-choice.wrong   { background: #f3f4f6; color: #9ca3af; border: 1.5px solid #e5e7eb; }
+  .p-choice-num { font-weight: 900; font-size: 12.5px; flex-shrink: 0; width: 17px; }
+  .p-choice.correct .p-choice-num { color: #2e7d52; }
+  .p-choice.wrong   .p-choice-num { color: #bbb; }
+  .p-choice-badge { font-size: 9px; font-weight: 700; padding: 1px 7px; border-radius: 20px; flex-shrink: 0; margin-left: auto; margin-top: 2px; }
+  .p-badge-c { background: #2e7d52; color: #fff; }
+  .p-badge-w { background: #e5e7eb; color: #9ca3af; }
+  .p-choice-reason { font-size: 10.5px; margin-top: 2px; }
+  .p-choice.correct .p-choice-reason { color: #2e7d52; }
+  .p-choice.wrong   .p-choice-reason { color: #9ca3af; }
+
+  .p-answer-banner { background: var(--ink); color: #fff; border-radius: 8px; padding: 10px 16px; display: flex; align-items: center; gap: 12px; font-size: 13.5px; font-weight: 700; }
+  .p-answer-num  { font-family: 'Noto Serif KR', serif; font-size: 24px; font-weight: 700; color: var(--yellow); line-height: 1; }
+  .p-answer-sub  { font-size: 10px; font-weight: 400; color: #aaa; margin-top: 2px; }
+
+  .p-summary-row { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
+  .p-summary-box { border-radius: 8px; padding: 10px 13px; font-size: 12px; line-height: 1.7; }
+  .p-summary-box.skill { background: #e8f0fb; border: 1.5px solid #2b5fa5; }
+  .p-summary-box.tip   { background: #fffbe6; border: 1.5px solid #f5c842; }
+  .p-summary-title { font-size: 9px; font-weight: 900; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+  .p-summary-box.skill .p-summary-title { color: #2b5fa5; }
+  .p-summary-box.tip   .p-summary-title { color: #7a5f00; }
+
+  hr.divider { border: none; border-top: 1px solid var(--border); margin: 8px 0; }
+
+  /* ── 인쇄 ── */
+  @media print {
+    .app { display: block; height: auto; }
+    .topbar, .sidebar, .tab-bar { display: none !important; }
+    .tab-content { display: flex !important; padding: 14px 20px; overflow: visible; }
+    #tabTeacher  { display: none !important; }
+    #tabStudent  { display: flex !important; }
+    .passage-box-text { font-size: 14.5px; line-height: 2.15; }
+    @page { margin: 12mm 14mm; size: A4; }
+  }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- 탑바 -->
+  <div class="topbar">
+    <div class="topbar-brand">씨탑</div>
+    <div class="topbar-title">수능정복</div>
+    <span class="topbar-sub">한대산 영어 독해 분석기</span>
+    <div class="topbar-right">수능 영어 · 빈칸 / 주제 / 순서 / 삽입</div>
+  </div>
+
+  <!-- 사이드바 -->
+  <div class="sidebar">
+
+    <!-- API 키 -->
+    <div class="api-section">
+      <div class="api-label-row">
+        <span class="api-label">🔑 Anthropic API Key</span>
+        <span class="api-status idle" id="apiStatus">미입력</span>
+      </div>
+      <div class="api-input-wrap">
+        <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
+        <button class="btn-api-save" onclick="saveApiKey()">저장</button>
+      </div>
+      <div class="api-hint">API 키는 이 브라우저 탭에만 저장됩니다.<br>탭을 닫으면 사라져요.</div>
+    </div>
+
+    <!-- 지문 -->
+    <div>
+      <label class="sb-label">📄 지문</label>
+      <textarea class="sb-textarea" id="passage" style="height:170px;" placeholder="지문 전체를 여기에 붙여넣으세요..."></textarea>
+    </div>
+
+    <!-- 유형 -->
+    <div>
+      <label class="sb-label">문제 유형</label>
+      <select id="qtype" class="sb-select">
+        <option value="">유형 선택</option>
+        <optgroup label="단어·구 빈칸">
+          <option value="빈칸 추론 31번">빈칸 추론 31번</option>
+          <option value="빈칸 추론 32번">빈칸 추론 32번</option>
+        </optgroup>
+        <optgroup label="문장 빈칸">
+          <option value="빈칸 추론 33번" selected>빈칸 추론 33번</option>
+          <option value="빈칸 추론 34번">빈칸 추론 34번</option>
+        </optgroup>
+        <optgroup label="대의 파악">
+          <option value="주제 21번">주제 21번</option>
+          <option value="요지 22번">요지 22번</option>
+          <option value="제목 23번">제목 23번</option>
+          <option value="함축의미 24번">함축의미 24번</option>
+        </optgroup>
+        <optgroup label="글의 구조">
+          <option value="무관한 문장 35번">무관한 문장 35번</option>
+          <option value="글의 순서 36번">글의 순서 36번</option>
+          <option value="글의 순서 37번">글의 순서 37번</option>
+          <option value="문장 삽입 38번">문장 삽입 38번</option>
+          <option value="문장 삽입 39번">문장 삽입 39번</option>
+          <option value="요약문 완성 40번">요약문 완성 40번</option>
+        </optgroup>
+      </select>
+    </div>
+
+    <!-- 등급 -->
+    <div>
+      <label class="sb-label">학생 등급</label>
+      <select id="grade" class="sb-select">
+        <option value="">등급 선택</option>
+        <option value="1~2등급">1~2등급</option>
+        <option value="3~4등급" selected>3~4등급</option>
+        <option value="5등급 이하">5등급 이하</option>
+      </select>
+    </div>
+
+    <!-- 선지 -->
+    <div>
+      <label class="sb-label">선지</label>
+      <textarea class="sb-textarea" id="choices" style="height:100px;" placeholder="① 선지1&#10;② 선지2&#10;③ 선지3&#10;④ 선지4&#10;⑤ 선지5"></textarea>
+    </div>
+
+    <button class="btn-analyze" id="btnAnalyze" onclick="startAnalysis()">🔍 분석 시작</button>
+    <button class="btn-reset" onclick="resetAll()">초기화</button>
+  </div>
+
+  <!-- 메인 영역 -->
+  <div class="main">
+
+    <!-- 탭 바 -->
+    <div class="tab-bar">
+      <button class="tab-btn active" id="tabBtnTeacher" onclick="switchTab('teacher')">
+        📋 선생님 분석
+        <span class="tab-badge badge-teacher">TEACHER</span>
+      </button>
+      <button class="tab-btn" id="tabBtnStudent" onclick="switchTab('student')">
+        🖨️ 학생 프린트
+        <span class="tab-badge badge-student">PRINT</span>
+      </button>
+      <div class="tab-right">
+        <button class="btn-pdf" id="btnPdf" onclick="window.print()" disabled>🖨️ PDF 저장</button>
+      </div>
+    </div>
+
+    <!-- 선생님 분석 탭 -->
+    <div class="tab-content active" id="tabTeacher">
+      <div class="empty-state" id="teacherEmpty">
+        <div class="empty-icon">📋</div>
+        <div class="empty-title">분석 대기 중</div>
+        <div class="empty-sub">왼쪽에 지문을 입력하고<br>분석 시작을 눌러주세요</div>
+      </div>
+      <div class="loading-state" id="teacherLoading" style="display:none;">
+        <div class="spinner"></div>
+        <div class="loading-text">한대산 스킬로 분석 중...</div>
+      </div>
+      <div id="teacherContent" style="display:none; flex-direction:column; gap:11px;"></div>
+    </div>
+
+    <!-- 학생 프린트 탭 -->
+    <div class="tab-content" id="tabStudent">
+      <div class="empty-state" id="printEmpty">
+        <div class="empty-icon">🖨️</div>
+        <div class="empty-title">프린트 대기 중</div>
+        <div class="empty-sub">분석 완료 후 학생용 프린트가<br>여기에 나타납니다</div>
+      </div>
+      <div class="loading-state" id="printLoading" style="display:none;">
+        <div class="spinner"></div>
+        <div class="loading-text">학생 프린트 생성 중...</div>
+      </div>
+      <div id="printContent" style="display:none; flex-direction:column; gap:11px;"></div>
+    </div>
+
+  </div><!-- /main -->
+</div><!-- /app -->
+
+<script>
+// ── API 키 관리 ──
+let apiKey = '';
+
+function saveApiKey() {
+  const val = document.getElementById('apiKey').value.trim();
+  if (!val.startsWith('sk-ant-')) {
+    setApiStatus('err', '형식 오류');
+    return;
+  }
+  apiKey = val;
+  setApiStatus('ok', '저장됨 ✓');
+}
+
+function setApiStatus(type, text) {
+  const el = document.getElementById('apiStatus');
+  el.className = 'api-status ' + type;
+  el.textContent = text;
+}
+
+// ── 탭 전환 ──
+function switchTab(tab) {
+  document.getElementById('tabTeacher').classList.toggle('active', tab === 'teacher');
+  document.getElementById('tabStudent').classList.toggle('active', tab === 'student');
+  document.getElementById('tabBtnTeacher').classList.toggle('active', tab === 'teacher');
+  document.getElementById('tabBtnStudent').classList.toggle('active', tab === 'student');
+}
+
+// ── Claude API 호출 ──
+async function callClaude(systemPrompt, userPrompt) {
+  const res = await fetch('https://api.anthropic.com/v1/messages', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+    body: JSON.stringify({
+      model: 'claude-sonnet-4-6',
+      max_tokens: 4096,
+      system: systemPrompt,
+      messages: [{ role: 'user', content: userPrompt }]
+    })
+  });
+  if (!res.ok) throw new Error('API 오류: ' + res.status);
+  const data = await res.json();
+  return data.content[0].text;
+}
+
+// ── 분석 시작 ──
+async function startAnalysis() {
+  const passage = document.getElementById('passage').value.trim();
+  const qtype   = document.getElementById('qtype').value;
+  const grade   = document.getElementById('grade').value;
+  const choices = document.getElementById('choices').value.trim();
+
+  if (!apiKey)  { alert('API 키를 먼저 입력하고 저장해주세요!'); return; }
+  if (!passage) { alert('지문을 입력해주세요!'); return; }
+  if (!qtype)   { alert('문제 유형을 선택해주세요!'); return; }
+  if (!grade)   { alert('등급을 선택해주세요!'); return; }
+
+  document.getElementById('btnAnalyze').disabled = true;
+  document.getElementById('btnPdf').disabled = true;
+
+  // 로딩 상태
+  ['teacherEmpty','teacherContent'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['printEmpty','printContent'].forEach(id => document.getElementById(id).style.display = 'none');
+  document.getElementById('teacherLoading').style.display = 'flex';
+  document.getElementById('printLoading').style.display   = 'flex';
+  switchTab('teacher');
+
+  try {
+    // ① 선생님 분석 JSON
+    const sysTeacher = `당신은 한대산 영어 독해 전문가입니다. 아래 스킬로 지문을 분석해 JSON만 반환하세요. 마크다운·코드블록 없이 순수 JSON만.
+
+한대산 핵심 스킬:
+1. 소재 잡기: 첫 문장 A→B 틀
+2. 역삼각형 구조: 도입→전개→결론
+3. 통념 처리: seem/but/however 이후 반박
+4. Chain 사고: 문장들 연결
+5. 맥락적 장치: If/When/예시 파악
+6. TMI 식별: 불필요한 수식어
+
+반환 JSON:
+{
+  "subject": "소재 10자 이내",
+  "structure": "도입→전개→결론 한줄 요약",
+  "skill_used": "이 문제 핵심 스킬 한줄",
+  "answer": "Claude가 판단한 정답 번호 (①②③④⑤)",
+  "answer_text": "정답 선지 텍스트",
+  "step1": "소재 잡기 분석 2~3문장",
+  "step2": "구조 파악 2~3문장",
+  "step3": "핵심 포인트 분석 2~3문장 (통념/Chain/맥락)",
+  "step4": "정답 도출 근거 2~3문장",
+  "wrong_reasons": ["①오답이유","②-","③오답이유","④오답이유","⑤오답이유"],
+  "tip": "실전 팁 한 줄"
+}`;
+
+    const teacherRaw = await callClaude(sysTeacher,
+      `문제유형: ${qtype}\n등급: ${grade}\n\n지문:\n${passage}\n\n선지:\n${choices}`
+    );
+
+    let A;
+    try { A = JSON.parse(teacherRaw.replace(/```json|```/g,'').trim()); }
+    catch(e) { A = { subject:'분석완료', structure:'', skill_used:'', answer:'', answer_text:'', step1:teacherRaw, step2:'', step3:'', step4:'', wrong_reasons:[], tip:'' }; }
+
+    // ② 마킹된 지문 HTML
+    const sysPrint = `당신은 수능 영어 선생님입니다. 지문에 한대산 스킬 마킹을 입혀 HTML만 반환하세요. 다른 설명 없이 HTML만.
+
+사용 클래스:
+<span class="hl-yellow">핵심 키워드</span>
+<span class="hl-red">정답 근거 문장/어구</span>  
+<span class="hl-blue">but/however/구조 신호어</span>
+<span class="hl-green">If/When 맥락 장치·예시</span>
+<span class="tmi-text">TMI(빠르게 넘길 부분)</span>
+
+말풍선:
+<div class="comment-bubble-p cb-yellow">💡 <b>STEP1</b> — 코멘트</div>
+<div class="comment-bubble-p cb-red">🔴 핵심 포인트 설명</div>
+<div class="comment-bubble-p">🔵 맥락 장치 설명</div>
+<div class="comment-bubble-p cb-green">✅ Chain 연결 설명</div>
+
+원칙: TMI는 꼭 필요한 부분만. 말풍선은 문단당 1개. 빈칸은 _______________ 표시. 정답 근거 문장은 반드시 hl-red.`;
+
+    const markedRaw = await callClaude(sysPrint,
+      `문제유형: ${qtype}\n정답: ${A.answer}\n\n지문:\n${passage}`
+    );
+    const markedPassage = markedRaw.replace(/^```html\s*/i, '').replace(/\s*```\s*$/, '').trim();
+
+    // ③ 렌더
+    renderTeacher(A, qtype, grade);
+    renderPrint(A, markedPassage, choices, qtype);
+    document.getElementById('btnPdf').disabled = false;
+
+  } catch(err) {
+    console.error(err);
+    alert('분석 중 오류가 발생했어요: ' + err.message);
+    document.getElementById('teacherLoading').style.display = 'none';
+    document.getElementById('teacherEmpty').style.display   = 'flex';
+    document.getElementById('printLoading').style.display   = 'none';
+    document.getElementById('printEmpty').style.display     = 'flex';
+  }
+
+  document.getElementById('btnAnalyze').disabled = false;
+}
+
+// ── 선생님 패널 렌더 ──
+function renderTeacher(A, qtype, grade) {
+  const steps = [
+    { n:'1', title:'소재 잡기',   body: A.step1 },
+    { n:'2', title:'구조 파악',   body: A.step2 },
+    { n:'3', title:'핵심 포인트', body: A.step3 },
+    { n:'4', title:'정답 도출',   body: A.step4 },
+  ];
+
+  const html = `
+    <div class="meta-chips">
+      <div class="chip"><span class="chip-label">📌 소재</span><span class="chip-value">${A.subject}</span></div>
+      <div class="chip"><span class="chip-label">📐 구조</span><span class="chip-value" style="font-size:11px;">${A.structure}</span></div>
+      <div class="chip"><span class="chip-label">🎯 핵심 스킬</span><span class="chip-value" style="font-size:11px;">${A.skill_used}</span></div>
+      <div class="chip"><span class="chip-label">✅ 정답</span><span class="chip-value" style="color:#2e7d52;">${A.answer} ${A.answer_text}</span></div>
+    </div>
+    ${steps.map(s => `
+    <div class="analysis-card">
+      <div class="analysis-card-header"><div class="step-dot">${s.n}</div>STEP ${s.n} · ${s.title}</div>
+      <div class="analysis-card-body">${s.body || '-'}</div>
+    </div>`).join('')}
+    ${A.tip ? `<div class="analysis-card">
+      <div class="analysis-card-header">💡 실전 팁</div>
+      <div class="analysis-card-body">${A.tip}</div>
+    </div>` : ''}`;
+
+  const el = document.getElementById('teacherContent');
+  el.innerHTML = html;
+  document.getElementById('teacherLoading').style.display = 'none';
+  el.style.display = 'flex';
+}
+
+// ── 프린트 패널 렌더 ──
+function renderPrint(A, markedPassage, choicesRaw, qtype) {
+  const lines = choicesRaw.split('\n').filter(l => l.trim());
+  const syms  = ['①','②','③','④','⑤'];
+
+  const choicesHtml = lines.map((line, i) => {
+    const sym = syms[i] || '';
+    const isCorrect = sym === A.answer;
+    const text = line.replace(/^[①②③④⑤]\s*/, '');
+    const reason = A.wrong_reasons && A.wrong_reasons[i]
+      ? A.wrong_reasons[i]
+      : (isCorrect ? '본문 근거와 일치 — 정답!' : '본문 근거와 불일치');
+    return `
+      <div class="p-choice ${isCorrect ? 'correct' : 'wrong'}">
+        <div class="p-choice-num">${sym}</div>
+        <div style="flex:1;">
+          <div>${isCorrect ? '<b>'+text+'</b>' : text}</div>
+          <div class="p-choice-reason">${isCorrect ? '✅ ' : '❌ '}${reason}</div>
+        </div>
+        <div class="p-choice-badge ${isCorrect ? 'p-badge-c' : 'p-badge-w'}">${isCorrect ? '정답' : '오답'}</div>
+      </div>`;
+  }).join('');
+
+  const html = `
+    <div class="p-legend">
+      <span class="p-legend-title">📌 범례</span>
+      <span><span class="hl-red">빨간</span> 정답 근거</span>
+      <span><span class="hl-yellow">노란</span> 핵심 키워드</span>
+      <span><span class="hl-blue">파란 박스</span> 구조 신호어</span>
+      <span><span class="hl-green">초록</span> 맥락 장치</span>
+      <span><span class="tmi-text">취소선</span> TMI</span>
+    </div>
+
+    <div class="p-meta-row">
+      <div class="p-meta-box"><div class="p-meta-label">📌 소재</div><div class="p-meta-value">${A.subject}</div></div>
+      <div class="p-meta-box"><div class="p-meta-label">📐 구조</div><div class="p-meta-value" style="font-size:10.5px;">${A.structure}</div></div>
+      <div class="p-meta-box"><div class="p-meta-label">🎯 핵심 스킬</div><div class="p-meta-value" style="font-size:10.5px;">${A.skill_used}</div></div>
+    </div>
+
+    <div class="passage-box">
+      <div class="passage-box-label">PASSAGE · ${qtype}</div>
+      <div class="passage-box-text">${markedPassage}</div>
+    </div>
+
+    ${choicesHtml ? `
+    <div class="p-card">
+      <div class="p-card-header">STEP 4 · 선지 분석</div>
+      <div class="p-card-body"><div class="p-choices">${choicesHtml}</div></div>
+    </div>` : ''}
+
+    <div class="p-answer-banner">
+      <div class="p-answer-num">${A.answer}</div>
+      <div>
+        <div>${A.answer_text}</div>
+        <div class="p-answer-sub">${A.step4 ? A.step4.slice(0,70)+'...' : ''}</div>
+      </div>
+    </div>
+
+    <div class="p-summary-row">
+      <div class="p-summary-box skill">
+        <div class="p-summary-title">🎯 핵심 스킬</div>
+        ${A.skill_used}
+      </div>
+      <div class="p-summary-box tip">
+        <div class="p-summary-title">💡 실전 팁</div>
+        ${A.tip || ''}
+      </div>
+    </div>`;
+
+  const el = document.getElementById('printContent');
+  el.innerHTML = html;
+  document.getElementById('printLoading').style.display = 'none';
+  el.style.display = 'flex';
+}
+
+// ── 초기화 ──
+function resetAll() {
+  document.getElementById('passage').value = '';
+  document.getElementById('choices').value = '';
+  document.getElementById('qtype').value   = '빈칸 추론 33번';
+  document.getElementById('grade').value   = '3~4등급';
+  document.getElementById('btnPdf').disabled = true;
+
+  ['teacherContent','printContent'].forEach(id => document.getElementById(id).style.display = 'none');
+  ['teacherEmpty','printEmpty'].forEach(id => document.getElementById(id).style.display = 'flex');
+  ['teacherLoading','printLoading'].forEach(id => document.getElementById(id).style.display = 'none');
+  switchTab('teacher');
+}
+</script>
+</body>
+</html>
