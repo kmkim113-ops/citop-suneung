@@ -271,7 +271,7 @@ let currentYear = new Date().getFullYear();
 let currentMonth = new Date().getMonth();
 let selectedDate = toDateStr(new Date());
 let editId = null;
-let sheetsUrl = localStorage.getItem('kelvin_sheets_url') || 'https://script.google.com/macros/s/AKfycbxE8Y7a0maDnOK4RrHx2HCZbPm9CqaHntCSdLZNNHlHM6x4y8QrEPoncBr4X8KwGs8tIw/exec';
+let sheetsUrl = localStorage.getItem('kelvin_sheets_url') || 'https://script.google.com/macros/s/AKfycbyBV5KaEonxPoLo9KMbKao0zzv17upmMEc-YZRAiCS8wsYklJtjYEYrlvf4i2bNY269Xg/exec';
 let currentTab = 'calendar';
 
 const COLORS = ['#2b5fa5','#d94f3d','#2e7d52','#f5c842','#7c3aed','#ea580c','#0891b2','#be185d'];
@@ -544,11 +544,11 @@ function syncSheets() {
 
 function pushToSheets() {
   if(!sheetsUrl) return;
-  fetch(sheetsUrl, {
-    method:'POST',
-    body: JSON.stringify({action:'save', events}),
-    headers:{'Content-Type':'application/json'}
-  }).then(()=>updateSyncStatus('ok')).catch(()=>{});
+  var eventsJson = encodeURIComponent(JSON.stringify(events));
+  fetch(sheetsUrl+'?action=save&events='+eventsJson)
+    .then(r=>r.json())
+    .then(()=>updateSyncStatus('ok'))
+    .catch(()=>{});
 }
 
 function openSheetsModal()  { document.getElementById('sheetsBg').classList.add('open'); document.getElementById('sheetsUrl').value=sheetsUrl; }
