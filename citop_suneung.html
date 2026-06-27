@@ -282,7 +282,7 @@
         <input type="password" id="apiKey" placeholder="sk-ant-..." autocomplete="off">
         <button class="btn-api-save" onclick="saveApiKey()">저장</button>
       </div>
-      <div class="api-hint">API 키는 이 브라우저 탭에만 저장됩니다.<br>탭을 닫으면 사라져요.</div>
+      <div class="api-hint">저장 버튼을 누르면 이 브라우저에 영구 저장됩니다.<br>다음에 열어도 자동으로 입력돼 있어요.</div>
     </div>
 
     <!-- 지문 -->
@@ -395,6 +395,16 @@
 // ── API 키 관리 ──
 let apiKey = '';
 
+// 페이지 로드 시 localStorage에서 키 복원
+window.addEventListener('DOMContentLoaded', () => {
+  const saved = localStorage.getItem('citop_ant_key');
+  if (saved) {
+    document.getElementById('apiKey').value = saved;
+    apiKey = saved;
+    setApiStatus('ok', '저장됨 ✓');
+  }
+});
+
 function saveApiKey() {
   const val = document.getElementById('apiKey').value.trim();
   if (!val.startsWith('sk-ant-')) {
@@ -402,6 +412,7 @@ function saveApiKey() {
     return;
   }
   apiKey = val;
+  localStorage.setItem('citop_ant_key', val);
   setApiStatus('ok', '저장됨 ✓');
 }
 
