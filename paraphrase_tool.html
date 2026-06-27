@@ -7,87 +7,43 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#f4f3f0;
-  --surface:#fff;
-  --surface2:#f8f8f6;
-  --border:#e0dfd9;
-  --border2:#c9c8c1;
-  --text:#18180f;
-  --text2:#5c5c52;
-  --text3:#9a9a8e;
-  --accent:#1a56db;
-  --accent-bg:#eff4ff;
-  --accent-bd:#c3d5fd;
-  --accent-txt:#1a3faa;
-  --danger:#dc2626;
-  --danger-bg:#fef2f2;
-  --danger-bd:#fecaca;
-  --green:#16a34a;
-  --green-bg:#f0fdf4;
-  --r:8px;
-  --rl:13px;
+  --bg:#f4f3f0;--surface:#fff;--surface2:#f8f8f6;
+  --border:#e0dfd9;--border2:#c9c8c1;
+  --text:#18180f;--text2:#5c5c52;--text3:#9a9a8e;
+  --accent:#1a56db;--accent-bg:#eff4ff;--accent-bd:#c3d5fd;--accent-txt:#1a3faa;
+  --danger:#dc2626;--danger-bg:#fef2f2;--danger-bd:#fecaca;
+  --green:#16a34a;--green-bg:#f0fdf4;
+  --r:8px;--rl:13px;
 }
 body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:14px;line-height:1.6}
 
-/* ── TOP BAR ── */
-.topbar{
-  background:var(--surface);border-bottom:1px solid var(--border);
-  padding:0 24px;height:52px;display:flex;align-items:center;gap:14px;
-  position:sticky;top:0;z-index:100;
-}
+.topbar{background:var(--surface);border-bottom:1px solid var(--border);padding:0 24px;height:52px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:100}
 .logo{font-size:16px;font-weight:800;color:var(--accent);letter-spacing:-.3px;white-space:nowrap}
 .logo span{color:var(--text);font-weight:400}
 .api-wrap{display:flex;align-items:center;gap:6px;margin-left:auto}
 .api-label{font-size:12px;color:var(--text3);white-space:nowrap}
-.api-inp{
-  width:260px;padding:5px 10px;
-  border:1px solid var(--border2);border-radius:var(--r);
-  font-size:12px;font-family:monospace;color:var(--text);
-  background:var(--surface2);outline:none;
-}
+.api-inp{width:260px;padding:5px 10px;border:1px solid var(--border2);border-radius:var(--r);font-size:12px;font-family:monospace;color:var(--text);background:var(--surface2);outline:none}
 .api-inp:focus{border-color:var(--accent)}
 .api-inp::placeholder{color:var(--text3)}
-.eye-btn,.save-btn{
-  padding:5px 10px;border:1px solid var(--border2);border-radius:var(--r);
-  background:var(--surface2);cursor:pointer;font-size:12px;color:var(--text2);
-  white-space:nowrap;transition:all .15s;
-}
+.eye-btn,.save-btn{padding:5px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface2);cursor:pointer;font-size:12px;color:var(--text2);white-space:nowrap;transition:all .15s}
 .eye-btn:hover,.save-btn:hover{border-color:var(--accent);color:var(--accent)}
 .api-status{font-size:11px;padding:3px 9px;border-radius:20px;white-space:nowrap}
 .status-ok{background:var(--green-bg);color:var(--green)}
 .status-no{background:var(--danger-bg);color:var(--danger)}
 
-/* ── LAYOUT ── */
 .layout{display:grid;grid-template-columns:300px 1fr;height:calc(100vh - 52px)}
-
-/* ── SIDEBAR ── */
-.sidebar{
-  background:var(--surface);border-right:1px solid var(--border);
-  overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:18px;
-}
+.sidebar{background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:18px 16px;display:flex;flex-direction:column;gap:18px}
 .sec-title{font-size:10px;font-weight:700;letter-spacing:.08em;color:var(--text3);text-transform:uppercase;margin-bottom:8px}
 
-/* Grade */
 .grade-row{display:flex;gap:5px}
-.g-btn{
-  flex:1;padding:7px 4px;text-align:center;
-  border:1px solid var(--border2);border-radius:var(--r);
-  background:var(--surface2);cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);
-  transition:all .15s;
-}
+.g-btn{flex:1;padding:7px 4px;text-align:center;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface2);cursor:pointer;font-size:13px;font-weight:500;color:var(--text2);transition:all .15s}
 .g-btn:hover{border-color:var(--accent);color:var(--accent)}
 .g-btn.on{background:var(--accent-bg);border-color:var(--accent);color:var(--accent-txt);font-weight:700}
 
-/* Presets */
 .preset-wrap{display:flex;flex-wrap:wrap;gap:5px}
-.p-btn{
-  padding:4px 10px;border:1px solid var(--border);border-radius:20px;
-  background:var(--surface2);cursor:pointer;font-size:11px;color:var(--text2);
-  transition:all .15s;
-}
+.p-btn{padding:4px 10px;border:1px solid var(--border);border-radius:20px;background:var(--surface2);cursor:pointer;font-size:11px;color:var(--text2);transition:all .15s}
 .p-btn:hover{border-color:var(--accent);color:var(--accent-txt);background:var(--accent-bg)}
 
-/* Technique sliders */
 .t-item{margin-bottom:9px}
 .t-top{display:flex;justify-content:space-between;margin-bottom:1px}
 .t-name{font-size:12px;font-weight:600;color:var(--text)}
@@ -95,145 +51,75 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;backgrou
 .t-desc{font-size:10px;color:var(--text3);margin-bottom:5px}
 input[type=range]{width:100%;height:3px;accent-color:var(--accent);cursor:pointer}
 
-/* Input */
-.textarea-wrap{position:relative}
-textarea#src{
-  width:100%;min-height:140px;padding:10px 12px;
-  border:1px solid var(--border2);border-radius:var(--r);
-  font-size:13px;line-height:1.7;color:var(--text);
-  background:var(--surface2);font-family:inherit;resize:vertical;outline:none;
-  transition:border-color .15s;
-}
+textarea#src{width:100%;min-height:140px;padding:10px 12px;border:1px solid var(--border2);border-radius:var(--r);font-size:13px;line-height:1.7;color:var(--text);background:var(--surface2);font-family:inherit;resize:vertical;outline:none;transition:border-color .15s}
 textarea#src:focus{border-color:var(--accent)}
 textarea#src::placeholder{color:var(--text3)}
 
-.run-btn{
-  width:100%;padding:10px;
-  background:var(--accent);color:#fff;
-  border:none;border-radius:var(--r);
-  font-size:14px;font-weight:700;cursor:pointer;
-  display:flex;align-items:center;justify-content:center;gap:8px;
-  transition:opacity .15s;
-}
+.run-btn{width:100%;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:var(--r);font-size:14px;font-weight:700;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;transition:opacity .15s}
 .run-btn:hover{opacity:.88}
 .run-btn:disabled{opacity:.4;cursor:not-allowed}
-.reset-btn{
-  width:100%;padding:7px;margin-top:5px;
-  border:1px solid var(--border2);border-radius:var(--r);
-  background:var(--surface2);cursor:pointer;font-size:12px;color:var(--text2);
-  transition:all .15s;
-}
+.reset-btn{width:100%;padding:7px;margin-top:5px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface2);cursor:pointer;font-size:12px;color:var(--text2);transition:all .15s}
 .reset-btn:hover{border-color:var(--danger);color:var(--danger)}
 
 .spinner{width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .6s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
-/* ── MAIN PANEL ── */
 .panel{overflow-y:auto;padding:22px 26px;display:flex;flex-direction:column;gap:16px}
-
-/* Tabs */
 .tab-bar{display:flex;border-bottom:1px solid var(--border);gap:0}
-.tab{
-  padding:8px 15px;font-size:13px;font-weight:500;color:var(--text2);
-  cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap;
-}
+.tab{padding:8px 15px;font-size:13px;font-weight:500;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s;white-space:nowrap}
 .tab:hover{color:var(--text)}
 .tab.on{color:var(--accent);border-bottom-color:var(--accent);font-weight:700}
 .tab-pane{display:none;padding-top:16px}
 .tab-pane.on{display:block}
 
-/* Summary pill row */
-.sum-row{
-  display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;
-  background:var(--accent-bg);border:1px solid var(--accent-bd);
-  border-radius:var(--r);margin-bottom:14px;
-}
+.sum-row{display:flex;flex-wrap:wrap;gap:6px;padding:10px 14px;background:var(--accent-bg);border:1px solid var(--accent-bd);border-radius:var(--r);margin-bottom:14px}
 .sum-pill{font-size:12px;color:var(--accent-txt)}
 .sum-pill b{font-weight:700}
 
-/* Result */
-.result-box{
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:var(--rl);padding:18px 20px;
-  font-size:15px;line-height:1.9;color:var(--text);
-  white-space:pre-wrap;word-break:break-word;
-}
-.copy-btn{
-  float:right;padding:4px 10px;border:1px solid var(--border2);
-  border-radius:var(--r);background:var(--surface);cursor:pointer;
-  font-size:11px;color:var(--text2);transition:all .15s;
-}
+.result-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--rl);padding:18px 20px;font-size:15px;line-height:1.9;color:var(--text);white-space:pre-wrap;word-break:break-word}
+.copy-btn{float:right;padding:4px 10px;border:1px solid var(--border2);border-radius:var(--r);background:var(--surface);cursor:pointer;font-size:11px;color:var(--text2);transition:all .15s}
 .copy-btn:hover{border-color:var(--accent);color:var(--accent)}
 
-/* Tables */
 .tbl-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;font-size:13px}
-th{
-  text-align:left;padding:8px 11px;
-  background:var(--surface2);color:var(--text2);font-weight:600;
-  border-bottom:1px solid var(--border);white-space:nowrap;
-}
+th{text-align:left;padding:8px 11px;background:var(--surface2);color:var(--text2);font-weight:600;border-bottom:1px solid var(--border);white-space:nowrap}
 td{padding:8px 11px;border-bottom:1px solid var(--border);vertical-align:top;line-height:1.5}
 tr:last-child td{border-bottom:none}
-.tag{
-  display:inline-block;background:var(--accent-bg);color:var(--accent-txt);
-  border:1px solid var(--accent-bd);font-size:11px;padding:2px 8px;border-radius:20px;
-}
+.tag{display:inline-block;background:var(--accent-bg);color:var(--accent-txt);border:1px solid var(--accent-bd);font-size:11px;padding:2px 8px;border-radius:20px}
 
-/* Stats */
 .stats-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:14px}
 .s-card{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px}
 .s-label{font-size:10px;color:var(--text3);margin-bottom:3px}
 .s-val{font-size:20px;font-weight:800;color:var(--text)}
-
-.eval-box{
-  background:var(--surface2);border:1px solid var(--border);
-  border-radius:var(--r);padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text)
-}
+.eval-box{background:var(--surface2);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;font-size:13px;line-height:1.8;color:var(--text)}
 .struct-item{padding:6px 0;border-bottom:1px solid var(--border);font-size:13px}
 .struct-item:last-child{border-bottom:none}
 .struct-num{color:var(--text3);font-size:11px;margin-right:8px}
 
-.chip-wrap{display:flex;flex-wrap:wrap;gap:5px;margin-top:6px}
-.chip{font-size:12px;background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:3px 10px;color:var(--text2)}
-.chip b{color:var(--accent-txt)}
-
-/* Empty / Error */
 .empty{text-align:center;padding:60px 20px;color:var(--text3)}
 .empty-icon{font-size:40px;margin-bottom:10px}
-.err-box{
-  background:var(--danger-bg);border:1px solid var(--danger-bd);
-  border-radius:var(--r);padding:10px 13px;font-size:13px;color:var(--danger);margin-top:8px
-}
+.err-box{background:var(--danger-bg);border:1px solid var(--danger-bd);border-radius:var(--r);padding:10px 13px;font-size:13px;color:var(--danger);margin-top:8px}
 
-/* Print */
-@media print{
-  .topbar,.sidebar,.tab-bar,.copy-btn,.run-btn,.reset-btn{display:none!important}
-  .layout{display:block}
-  .panel{padding:0}
-  .tab-pane{display:block!important}
-}
+/* 저장 토스트 */
+.toast{position:fixed;bottom:24px;right:24px;background:#18180f;color:#fff;padding:10px 18px;border-radius:var(--r);font-size:13px;opacity:0;transition:opacity .3s;pointer-events:none;z-index:999}
+.toast.show{opacity:1}
 </style>
 </head>
 <body>
 
-<!-- TOP BAR -->
 <header class="topbar">
   <div class="logo">재진술<span> 프로그램</span></div>
   <div class="api-wrap">
-    <span class="api-label">🔑 Anthropic API Key</span>
+    <span class="api-label">🔑 API Key</span>
     <input class="api-inp" type="password" id="api-key" placeholder="sk-ant-api03-..." oninput="checkKey()">
     <button class="eye-btn" onclick="toggleKey()">👁</button>
-    <button class="save-btn" onclick="saveKey()">저장</button>
+    <button class="save-btn" onclick="saveKey()">💾 저장</button>
     <span class="api-status status-no" id="api-status">미입력</span>
   </div>
 </header>
 
 <div class="layout">
-
-  <!-- SIDEBAR -->
   <aside class="sidebar">
-
     <div>
       <div class="sec-title">학년 선택 (필수)</div>
       <div class="grade-row">
@@ -242,7 +128,6 @@ tr:last-child td{border-bottom:none}
         <button class="g-btn on" data-g="3" onclick="setGrade(3)">고 3</button>
       </div>
     </div>
-
     <div>
       <div class="sec-title">프리셋</div>
       <div class="preset-wrap">
@@ -254,17 +139,14 @@ tr:last-child td{border-bottom:none}
         <button class="p-btn" onclick="applyPreset('rst')">초기화</button>
       </div>
     </div>
-
     <div>
       <div class="sec-title">기법별 적용 비율</div>
       <div id="tgrid"></div>
     </div>
-
     <div>
       <div class="sec-title">원문 입력</div>
       <textarea id="src" placeholder="재진술할 영어 지문을 여기에 붙여넣으세요."></textarea>
     </div>
-
     <div>
       <div id="err-box" style="display:none"></div>
       <button class="run-btn" id="run-btn" onclick="runParaphrase()">
@@ -272,34 +154,32 @@ tr:last-child td{border-bottom:none}
       </button>
       <button class="reset-btn" onclick="resetAll()">↺ 초기화</button>
     </div>
-
   </aside>
 
-  <!-- MAIN PANEL -->
   <main class="panel">
-
     <div id="output-wrap">
-      <div class="empty" id="empty-state">
+      <div class="empty">
         <div class="empty-icon">✏️</div>
         <div>왼쪽에 지문을 입력하고<br>재진술 생성을 눌러주세요</div>
       </div>
     </div>
-
   </main>
 </div>
 
+<div class="toast" id="toast"></div>
+
 <script>
-const TECHS = [
-  {id:'lex', name:'어휘 교체',       desc:'동의어·반의어·학술어휘 대체',        v:70},
-  {id:'str', name:'문장 구조 변경',  desc:'능동↔수동, 결합·분리, 어순 변경',    v:70},
-  {id:'cls', name:'절 변환',         desc:'관계절, 분사구문, 부정사, 동명사',    v:60},
-  {id:'nom', name:'명사화',           desc:'동사·형용사 → 명사 표현',             v:50},
-  {id:'con', name:'접속 표현 교체',  desc:'however→nevertheless 등',             v:60},
-  {id:'tru', name:'실질적 재진술',   desc:'의미만 유지한 완전 재작성',            v:60},
-  {id:'ord', name:'정보 위치 변경',  desc:'부연·결론 위치 이동',                  v:40},
-  {id:'abs', name:'추상↔구체 표현', desc:'추상화 또는 구체화',                    v:40},
+const TECHS=[
+  {id:'lex',name:'어휘 교체',desc:'동의어·반의어·학술어휘 대체',v:70},
+  {id:'str',name:'문장 구조 변경',desc:'능동↔수동, 결합·분리, 어순 변경',v:70},
+  {id:'cls',name:'절 변환',desc:'관계절, 분사구문, 부정사, 동명사',v:60},
+  {id:'nom',name:'명사화',desc:'동사·형용사 → 명사 표현',v:50},
+  {id:'con',name:'접속 표현 교체',desc:'however→nevertheless 등',v:60},
+  {id:'tru',name:'실질적 재진술',desc:'의미만 유지한 완전 재작성',v:60},
+  {id:'ord',name:'정보 위치 변경',desc:'부연·결론 위치 이동',v:40},
+  {id:'abs',name:'추상↔구체 표현',desc:'추상화 또는 구체화',v:40},
 ];
-const PRESETS = {
+const PRESETS={
   min:{lex:25,str:25,cls:15,nom:10,con:20,tru:20,ord:10,abs:10},
   std:{lex:70,str:70,cls:60,nom:50,con:60,tru:60,ord:40,abs:40},
   max:{lex:90,str:90,cls:85,nom:80,con:80,tru:90,ord:70,abs:65},
@@ -307,160 +187,146 @@ const PRESETS = {
   voc:{lex:95,str:40,cls:35,nom:65,con:70,tru:65,ord:20,abs:55},
   rst:{lex:70,str:70,cls:60,nom:50,con:60,tru:60,ord:40,abs:40},
 };
+let grade=3,vals={};
+TECHS.forEach(t=>vals[t.id]=t.v);
 
-let grade = 3;
-let vals = {};
-TECHS.forEach(t => vals[t.id] = t.v);
-
-// Restore saved key
-window.addEventListener('DOMContentLoaded', () => {
-  const saved = sessionStorage.getItem('ant_key');
-  if (saved) { document.getElementById('api-key').value = saved; checkKey(); }
+// ── API KEY: localStorage에 영구 저장 ──
+window.addEventListener('DOMContentLoaded',()=>{
+  const saved=localStorage.getItem('para_ant_key');
+  if(saved){
+    document.getElementById('api-key').value=saved;
+    checkKey();
+  }
   renderGrid();
 });
 
-function saveKey() {
-  const k = document.getElementById('api-key').value.trim();
-  if (k) { sessionStorage.setItem('ant_key', k); checkKey(); alert('저장됐습니다 (탭 닫으면 사라짐)'); }
+function saveKey(){
+  const k=document.getElementById('api-key').value.trim();
+  if(!k){showToast('API 키를 입력하세요');return;}
+  localStorage.setItem('para_ant_key',k);
+  checkKey();
+  showToast('✓ API 키가 저장됐습니다 (이 브라우저에서 유지됩니다)');
 }
-function toggleKey() {
-  const i = document.getElementById('api-key');
-  i.type = i.type === 'password' ? 'text' : 'password';
+function toggleKey(){
+  const i=document.getElementById('api-key');
+  i.type=i.type==='password'?'text':'password';
 }
-function checkKey() {
-  const k = document.getElementById('api-key').value.trim();
-  const s = document.getElementById('api-status');
-  if (k.startsWith('sk-ant')) { s.textContent = '✓ 입력됨'; s.className = 'api-status status-ok'; }
-  else { s.textContent = '미입력'; s.className = 'api-status status-no'; }
+function checkKey(){
+  const k=document.getElementById('api-key').value.trim();
+  const s=document.getElementById('api-status');
+  if(k.startsWith('sk-ant')){s.textContent='✓ 저장됨';s.className='api-status status-ok';}
+  else{s.textContent='미입력';s.className='api-status status-no';}
+}
+function showToast(msg){
+  const t=document.getElementById('toast');
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
 }
 
-function setGrade(g) {
-  grade = g;
-  document.querySelectorAll('.g-btn').forEach(b => b.classList.toggle('on', +b.dataset.g === g));
-}
-function applyPreset(k) {
-  const p = PRESETS[k]; Object.keys(p).forEach(id => { vals[id] = p[id]; }); renderGrid();
-}
-function renderGrid() {
-  document.getElementById('tgrid').innerHTML = TECHS.map(t => `
+function setGrade(g){grade=g;document.querySelectorAll('.g-btn').forEach(b=>b.classList.toggle('on',+b.dataset.g===g));}
+function applyPreset(k){const p=PRESETS[k];Object.keys(p).forEach(id=>{vals[id]=p[id];});renderGrid();}
+function renderGrid(){
+  document.getElementById('tgrid').innerHTML=TECHS.map(t=>`
     <div class="t-item">
       <div class="t-top"><span class="t-name">${t.name}</span><span class="t-pct" id="pct-${t.id}">${vals[t.id]}%</span></div>
       <div class="t-desc">${t.desc}</div>
       <input type="range" min="0" max="100" step="5" value="${vals[t.id]}" oninput="upd('${t.id}',+this.value)">
     </div>`).join('');
 }
-function upd(id, v) { vals[id] = v; document.getElementById('pct-' + id).textContent = v + '%'; }
-function resetAll() {
-  document.getElementById('src').value = '';
-  applyPreset('rst');
-  setGrade(3);
-  document.getElementById('output-wrap').innerHTML = `<div class="empty" id="empty-state"><div class="empty-icon">✏️</div><div>왼쪽에 지문을 입력하고<br>재진술 생성을 눌러주세요</div></div>`;
-  document.getElementById('err-box').style.display = 'none';
+function upd(id,v){vals[id]=v;document.getElementById('pct-'+id).textContent=v+'%';}
+function resetAll(){
+  document.getElementById('src').value='';
+  applyPreset('rst');setGrade(3);
+  document.getElementById('output-wrap').innerHTML=`<div class="empty"><div class="empty-icon">✏️</div><div>왼쪽에 지문을 입력하고<br>재진술 생성을 눌러주세요</div></div>`;
+  document.getElementById('err-box').style.display='none';
 }
+function showErr(msg){const b=document.getElementById('err-box');b.className='err-box';b.textContent='⚠ '+msg;b.style.display='block';}
+function hideErr(){document.getElementById('err-box').style.display='none';}
 
-function showErr(msg) {
-  const b = document.getElementById('err-box');
-  b.className = 'err-box'; b.textContent = '⚠ ' + msg; b.style.display = 'block';
-}
-function hideErr() { document.getElementById('err-box').style.display = 'none'; }
-
-function buildPrompt(text) {
-  const gl = ['고등학교 1학년','고등학교 2학년','고등학교 3학년'][grade - 1];
-  const gn = grade===1?'친숙한 어휘, 보통 문장 길이, 제한적 구조 변화':grade===2?'학술 어휘 증가, 구조 재배치, 명사화, 다양한 문법':'고급 어휘, 광범위한 구조 변환, 내포절, 세련된 연결 표현, 높은 추상화';
-  const tl = TECHS.map(t=>`- ${t.name}: ${vals[t.id]}%`).join('\n');
+function buildPrompt(text){
+  const gl=['고등학교 1학년','고등학교 2학년','고등학교 3학년'][grade-1];
+  const gn=grade===1?'친숙한 어휘, 보통 문장 길이, 제한적 구조 변화':grade===2?'학술 어휘 증가, 구조 재배치, 명사화, 다양한 문법':'고급 어휘, 광범위한 구조 변환, 내포절, 세련된 연결 표현, 높은 추상화';
+  const tl=TECHS.map(t=>`- ${t.name}: ${vals[t.id]}%`).join('\n');
   return `You are an expert Korean high school English exam writer. Paraphrase the passage for a ${gl} exam.\n\nGRADE (${gl}): ${gn}\n\nTECHNIQUE INTENSITY (0%=skip, 100%=apply extensively):\n${tl}\n\nRULES:\n- Preserve ALL meaning. Do not add or remove information.\n- Apply each technique proportionally to its percentage.\n- Avoid copying more than 6 consecutive words from the original.\n- Write natural academic English only.\n\nORIGINAL:\n${text}\n\nRespond ONLY with valid JSON (no markdown fences):\n{"paraphrase":"...","comparison":[{"original":"...","paraphrased":"...","technique":"기법(한국어)"}],"structural_changes":["..."],"vocab_changes":[{"from":"...","to":"..."}],"stats":{"vocab_pct":75,"struct_pct":70,"meaning_pct":98,"level":"Moderate-High"},"teacher_eval":"한국어 평가"}`;
 }
 
-function switchTab(name) {
-  const order = ['result','compare','struct','vocab','stats'];
-  document.querySelectorAll('.tab').forEach((t,i) => t.classList.toggle('on', order[i]===name));
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+function switchTab(name){
+  const order=['result','compare','struct','vocab','stats'];
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('on',order[i]===name));
+  document.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('on'));
   document.getElementById('pane-'+name).classList.add('on');
 }
-
-function copyResult() {
+function copyResult(){
   navigator.clipboard.writeText(document.getElementById('result-text').textContent).then(()=>{
-    const b = document.querySelector('.copy-btn'); b.textContent='✓ 복사됨';
-    setTimeout(()=>{ b.textContent='복사'; }, 1600);
+    const b=document.querySelector('.copy-btn');b.textContent='✓ 복사됨';
+    setTimeout(()=>{b.textContent='복사';},1600);
   });
 }
 
-async function runParaphrase() {
-  const apiKey = document.getElementById('api-key').value.trim();
-  const src = document.getElementById('src').value.trim();
+async function runParaphrase(){
+  const apiKey=document.getElementById('api-key').value.trim();
+  const src=document.getElementById('src').value.trim();
   hideErr();
-  if (!apiKey || !apiKey.startsWith('sk-ant')) { showErr('API 키를 먼저 입력해주세요.'); return; }
-  if (!src) { showErr('원문을 입력해주세요.'); return; }
+  if(!apiKey||!apiKey.startsWith('sk-ant')){showErr('API 키를 먼저 입력하고 저장해주세요.');return;}
+  if(!src){showErr('원문을 입력해주세요.');return;}
 
-  const btn = document.getElementById('run-btn');
-  const lbl = document.getElementById('btn-label');
-  btn.disabled = true;
-  lbl.innerHTML = '<span class="spinner"></span> 생성 중...';
+  const btn=document.getElementById('run-btn');
+  const lbl=document.getElementById('btn-label');
+  btn.disabled=true;
+  lbl.innerHTML='<span class="spinner"></span> 생성 중...';
+  document.getElementById('output-wrap').innerHTML=`<div class="empty"><div class="empty-icon" style="animation:spin 1s linear infinite;display:inline-block">⚙</div><div style="margin-top:10px">재진술 생성 중입니다...</div></div>`;
 
-  // Show loading state in panel
-  document.getElementById('output-wrap').innerHTML = `
-    <div class="empty"><div class="empty-icon" style="animation:spin 1s linear infinite;display:inline-block">⚙</div><br><div style="margin-top:10px">재진술 생성 중입니다...</div></div>`;
-
-  try {
-    const res = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true',
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{
+        'Content-Type':'application/json',
+        'x-api-key':apiKey,
+        'anthropic-version':'2023-06-01',
+        'anthropic-dangerous-direct-browser-access':'true',
       },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 4000,
-        messages: [{ role: 'user', content: buildPrompt(src) }]
+      body:JSON.stringify({
+        model:'claude-sonnet-4-6',
+        max_tokens:4000,
+        messages:[{role:'user',content:buildPrompt(src)}]
       })
     });
-
-    if (!res.ok) {
-      const e = await res.json().catch(()=>({}));
-      throw new Error(e.error?.message || 'HTTP ' + res.status);
-    }
-    const data = await res.json();
-    const raw = data.content?.find(c=>c.type==='text')?.text || '';
+    if(!res.ok){const e=await res.json().catch(()=>({}));throw new Error(e.error?.message||'HTTP '+res.status);}
+    const data=await res.json();
+    const raw=data.content?.find(c=>c.type==='text')?.text||'';
     let d;
-    try { d = JSON.parse(raw.replace(/```json|```/g,'').trim()); }
-    catch(e) { throw new Error('응답 파싱 실패. 다시 시도해주세요.'); }
-
+    try{d=JSON.parse(raw.replace(/```json|```/g,'').trim());}
+    catch(e){throw new Error('응답 파싱 실패. 다시 시도해주세요.');}
     renderOutput(d);
-
-  } catch(err) {
-    document.getElementById('output-wrap').innerHTML = `<div class="empty"><div class="empty-icon">⚠️</div><div>${err.message}</div></div>`;
-  } finally {
-    btn.disabled = false;
-    lbl.textContent = '🔍 재진술 생성';
+  }catch(err){
+    document.getElementById('output-wrap').innerHTML=`<div class="empty"><div class="empty-icon">⚠️</div><div>${err.message}</div></div>`;
+  }finally{
+    btn.disabled=false;lbl.textContent='🔍 재진술 생성';
   }
 }
 
-function renderOutput(d) {
-  const gl = ['고1','고2','고3'][grade-1];
-  const s = d.stats || {};
-
-  const sumPills = [
+function renderOutput(d){
+  const gl=['고1','고2','고3'][grade-1];
+  const s=d.stats||{};
+  const sumPills=[
     `<span class="sum-pill"><b>${gl}</b> 재진술</span>`,
     `<span class="sum-pill">어휘 교체 <b>${s.vocab_pct||0}%</b></span>`,
     `<span class="sum-pill">구조 변환 <b>${s.struct_pct||0}%</b></span>`,
     `<span class="sum-pill">의미 보존 <b>${s.meaning_pct||0}%</b></span>`,
     `<span class="sum-pill">변형 강도 <b>${s.level||'-'}</b></span>`,
   ].join('<span style="color:var(--border2)"> | </span>');
-
-  const cmpRows = (d.comparison||[]).map(r=>`<tr><td>${r.original||''}</td><td>${r.paraphrased||''}</td><td><span class="tag">${r.technique||''}</span></td></tr>`).join('');
-  const structItems = (d.structural_changes||[]).map((c,i)=>`<div class="struct-item"><span class="struct-num">${i+1}.</span>${c}</div>`).join('');
-  const vocabRows = (d.vocab_changes||[]).map(v=>`<tr><td style="color:var(--text2)">${v.from||''}</td><td style="font-weight:600;color:var(--accent)">${v.to||''}</td></tr>`).join('');
-  const statCards = [
-    {l:'어휘 교체율', v:(s.vocab_pct||0)+'%'},
-    {l:'구조 변환율', v:(s.struct_pct||0)+'%'},
-    {l:'의미 보존율', v:(s.meaning_pct||0)+'%'},
-    {l:'변형 강도',   v:s.level||'-'},
-    {l:'대상 학년',   v:gl},
+  const cmpRows=(d.comparison||[]).map(r=>`<tr><td>${r.original||''}</td><td>${r.paraphrased||''}</td><td><span class="tag">${r.technique||''}</span></td></tr>`).join('');
+  const structItems=(d.structural_changes||[]).map((c,i)=>`<div class="struct-item"><span class="struct-num">${i+1}.</span>${c}</div>`).join('');
+  const vocabRows=(d.vocab_changes||[]).map(v=>`<tr><td style="color:var(--text2)">${v.from||''}</td><td style="font-weight:600;color:var(--accent)">${v.to||''}</td></tr>`).join('');
+  const statCards=[
+    {l:'어휘 교체율',v:(s.vocab_pct||0)+'%'},
+    {l:'구조 변환율',v:(s.struct_pct||0)+'%'},
+    {l:'의미 보존율',v:(s.meaning_pct||0)+'%'},
+    {l:'변형 강도',v:s.level||'-'},
+    {l:'대상 학년',v:gl},
   ].map(c=>`<div class="s-card"><div class="s-label">${c.l}</div><div class="s-val">${c.v}</div></div>`).join('');
 
-  document.getElementById('output-wrap').innerHTML = `
+  document.getElementById('output-wrap').innerHTML=`
     <div class="sum-row">${sumPills}</div>
     <div class="tab-bar">
       <div class="tab on"  onclick="switchTab('result')">📄 재진술 결과</div>
@@ -469,35 +335,23 @@ function renderOutput(d) {
       <div class="tab"     onclick="switchTab('vocab')">📖 어휘 변경</div>
       <div class="tab"     onclick="switchTab('stats')">📊 통계 & 평가</div>
     </div>
-
     <div class="tab-pane on" id="pane-result">
       <button class="copy-btn" onclick="copyResult()">복사</button>
       <div class="result-box" id="result-text">${(d.paraphrase||'').replace(/</g,'&lt;')}</div>
     </div>
-
     <div class="tab-pane" id="pane-compare">
-      <div class="tbl-wrap">
-        <table><thead><tr><th style="width:32%">원문 표현</th><th style="width:32%">재진술 표현</th><th style="width:36%">적용 기법</th></tr></thead>
-        <tbody>${cmpRows}</tbody></table>
-      </div>
+      <div class="tbl-wrap"><table><thead><tr><th style="width:32%">원문 표현</th><th style="width:32%">재진술 표현</th><th style="width:36%">적용 기법</th></tr></thead><tbody>${cmpRows}</tbody></table></div>
     </div>
-
     <div class="tab-pane" id="pane-struct">
       <div class="eval-box">${structItems||'<span style="color:var(--text3)">데이터 없음</span>'}</div>
     </div>
-
     <div class="tab-pane" id="pane-vocab">
-      <div class="tbl-wrap">
-        <table><thead><tr><th style="width:45%">원문</th><th style="width:55%">재진술</th></tr></thead>
-        <tbody>${vocabRows}</tbody></table>
-      </div>
+      <div class="tbl-wrap"><table><thead><tr><th style="width:45%">원문</th><th style="width:55%">재진술</th></tr></thead><tbody>${vocabRows}</tbody></table></div>
     </div>
-
     <div class="tab-pane" id="pane-stats">
       <div class="stats-row">${statCards}</div>
       <div class="eval-box">${d.teacher_eval||''}</div>
-    </div>
-  `;
+    </div>`;
 }
 </script>
 </body>
